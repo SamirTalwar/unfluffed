@@ -7,17 +7,70 @@
 
     <name>Unfluffed</name>
 
+    <properties>
+        <scala.version>2.11</scala.version>
+
+        <dependencies.cometd.version>3.0.1</dependencies.cometd.version>
+        <dependencies.javax.servlet.version>3.1.0</dependencies.javax.servlet.version>
+        <dependencies.jetty.version>9.2.2.v20140723</dependencies.jetty.version>
+        <dependencies.scala.version>2.11.2</dependencies.scala.version>
+        <dependencies.scalatest.version>2.2.2</dependencies.scalatest.version>
+        <dependencies.slf4j.version>1.7.7</dependencies.slf4j.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
-            <version>2.11.2</version>
+            <version>${dependencies.scala.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${dependencies.javax.servlet.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.cometd.java</groupId>
+            <artifactId>bayeux-api</artifactId>
+            <version>${dependencies.cometd.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.cometd.javascript</groupId>
+            <artifactId>cometd-javascript-jquery</artifactId>
+            <version>${dependencies.cometd.version}</version>
+            <type>war</type>
+        </dependency>
+        <dependency>
+            <groupId>org.cometd.java</groupId>
+            <artifactId>cometd-java-server</artifactId>
+            <version>${dependencies.cometd.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.cometd.java</groupId>
+            <artifactId>cometd-java-websocket-javax-server</artifactId>
+            <version>${dependencies.cometd.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>${dependencies.jetty.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-servlet</artifactId>
+            <version>${dependencies.jetty.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${dependencies.slf4j.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.scalatest</groupId>
-            <artifactId>scalatest_2.11</artifactId>
-            <version>2.2.2</version>
+            <artifactId>scalatest_${scala.version}</artifactId>
+            <version>${dependencies.scalatest.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -41,6 +94,26 @@
                 <groupId>net.alchim31.maven</groupId>
                 <artifactId>scala-maven-plugin</artifactId>
                 <version>3.2.0</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.9</version>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/generated</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

@@ -1,3 +1,7 @@
+# Artifacts
+/src/generated
+/target
+
 # IntelliJ IDEA
 .idea
 *.iml
