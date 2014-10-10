@@ -10,7 +10,7 @@
     <properties>
         <scala.version>2.11</scala.version>
 
-        <dependencies.cometd.version>3.0.1</dependencies.cometd.version>
+        <dependencies.cometd.version>3.0.2-SNAPSHOT</dependencies.cometd.version>
         <dependencies.javax.servlet.version>3.1.0</dependencies.javax.servlet.version>
         <dependencies.jetty.version>9.2.2.v20140723</dependencies.jetty.version>
         <dependencies.scala.version>2.11.2</dependencies.scala.version>

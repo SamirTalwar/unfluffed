@@ -25,6 +25,6 @@ object App {
     server.start()
 
     val bayeux = servlet.getBayeux
-    new HelloService(bayeux)
+    Services.initialize(bayeux)
   }
 }
