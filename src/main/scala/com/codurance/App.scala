@@ -1,5 +1,6 @@
 package com.codurance
 
+import com.typesafe.config.ConfigFactory
 import org.cometd.server.CometDServlet
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.handler.ResourceHandler
@@ -8,7 +9,9 @@ import org.eclipse.jetty.util.resource.Resource
 
 object App {
   def main(args: Array[String]) {
-    val server = new Server(8080)
+    val config = ConfigFactory.load()
+
+    val server = new Server(config.getInt("unfluffed.port"))
 
     val context = new ServletContextHandler(ServletContextHandler.SESSIONS)
     context.setContextPath("/")

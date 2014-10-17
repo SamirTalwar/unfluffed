@@ -16,6 +16,7 @@
         <dependencies.scala.version>2.11.2</dependencies.scala.version>
         <dependencies.scalatest.version>2.2.2</dependencies.scalatest.version>
         <dependencies.slf4j.version>1.7.7</dependencies.slf4j.version>
+        <dependencies.typesafe.config.version>1.2.1</dependencies.typesafe.config.version>
     </properties>
 
     <dependencies>
@@ -25,6 +26,11 @@
             <version>${dependencies.scala.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.typesafe</groupId>
+            <artifactId>config</artifactId>
+            <version>${dependencies.typesafe.config.version}</version>
+        </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
