@@ -14,6 +14,7 @@
         <dependencies.javax.servlet.version>3.1.0</dependencies.javax.servlet.version>
         <dependencies.jetty.version>9.2.2.v20140723</dependencies.jetty.version>
         <dependencies.scala.version>2.11.2</dependencies.scala.version>
+        <dependencies.scala-xml.version>1.0.2</dependencies.scala-xml.version>
         <dependencies.scalatest.version>2.2.2</dependencies.scalatest.version>
         <dependencies.slf4j.version>1.7.7</dependencies.slf4j.version>
         <dependencies.typesafe.config.version>1.2.1</dependencies.typesafe.config.version>
@@ -24,6 +25,11 @@
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
             <version>${dependencies.scala.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.scala-lang.modules</groupId>
+            <artifactId>scala-xml_${scala.version}</artifactId>
+            <version>${dependencies.scala-xml.version}</version>
         </dependency>
 
         <dependency>
