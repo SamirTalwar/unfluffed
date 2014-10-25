@@ -1,4 +1,4 @@
-package com.codurance
+package com.codurance.unfluffed
 
 import javax.servlet.http.{HttpServlet, HttpServletRequest, HttpServletResponse}
 

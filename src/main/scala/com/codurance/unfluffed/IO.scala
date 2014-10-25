@@ -1,4 +1,4 @@
-package com.codurance
+package com.codurance.unfluffed
 
 import java.io.{InputStream, OutputStream}
 import java.nio.ByteBuffer

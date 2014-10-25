@@ -1,6 +1,6 @@
-package com.codurance
+package com.codurance.unfluffed
 
-import javax.servlet.http.{HttpServletResponse, HttpServlet, HttpServletRequest}
+import javax.servlet.http.{HttpServlet, HttpServletRequest, HttpServletResponse}
 
 import org.eclipse.jetty.util.resource.Resource
 

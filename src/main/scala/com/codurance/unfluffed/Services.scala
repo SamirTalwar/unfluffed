@@ -1,4 +1,4 @@
-package com.codurance
+package com.codurance.unfluffed
 
 import scala.collection.JavaConverters._
 

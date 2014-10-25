@@ -1,6 +1,6 @@
 GENERATED_OUTPUT_DIR=src/generated
 FAYE_DIR=vendor/faye
-FAYE_OUTPUT_DIR=$(GENERATED_OUTPUT_DIR)/static/faye
+FAYE_OUTPUT_DIR=$(GENERATED_OUTPUT_DIR)/com/codurance/unfluffed/static/faye
 
 application: faye unfluffed
 
