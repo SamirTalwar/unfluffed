@@ -23,20 +23,18 @@ class FrameworkPageServlet(configuration: ApplicationConfiguration) extends Http
         <meta charset="utf-8"/>
 
         {configuration.assets.css.map { asset =>
-        <link rel="stylesheet" type="text/css" href={asset.path}/>
+        <link rel="stylesheet" type="text/css" href={asset.uri.toString()}/>
         }}
-
-        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
         <script type="text/javascript" src="/framework/faye/faye-browser-min.js"></script>
         <script type="text/javascript" src="/framework/unfluffed.js"></script>
 
         {configuration.processes.map { process =>
-        <script type="text/javascript" src={process.path}></script>
+        <script type="text/javascript" src={process.uri.toString()}></script>
         }}
 
         {configuration.assets.js.map { asset =>
-        <script type="text/javascript" src={asset.path}></script>
+        <script type="text/javascript" src={asset.uri.toString()}></script>
         }}
       </head>
 

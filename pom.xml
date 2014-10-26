@@ -14,6 +14,7 @@
         <dependencies.ficus.version>1.1.1</dependencies.ficus.version>
         <dependencies.javax.servlet.version>3.1.0</dependencies.javax.servlet.version>
         <dependencies.scala.version>2.11.2</dependencies.scala.version>
+        <dependencies.scala-uri.version>0.4.3</dependencies.scala-uri.version>
         <dependencies.scala-xml.version>1.0.2</dependencies.scala-xml.version>
         <dependencies.scalatest.version>2.2.2</dependencies.scalatest.version>
         <dependencies.slf4j.version>1.7.7</dependencies.slf4j.version>
@@ -52,6 +53,11 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>${dependencies.slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.netaporter</groupId>
+            <artifactId>scala-uri_${scala.version}</artifactId>
+            <version>${dependencies.scala-uri.version}</version>
         </dependency>
 
         <dependency>
