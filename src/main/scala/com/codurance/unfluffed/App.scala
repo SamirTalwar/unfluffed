@@ -11,7 +11,6 @@ import io.undertow.servlet.Servlets
 import io.undertow.servlet.api.{InstanceFactory, InstanceHandle}
 import io.undertow.{Handlers, Undertow}
 import org.cometd.server.CometDServlet
-import org.eclipse.jetty.util.resource.Resource.newClassPathResource
 
 object App {
   val STATIC_RESOURCE_PATH = "com/codurance/unfluffed/static"
@@ -29,7 +28,7 @@ object App {
       .setDeploymentName("Unfluffed")
       .setClassLoader(getClass.getClassLoader)
       .setContextPath("/")
-      .addServlet(servlet("FrameworkPage", () => new FrameworkPageServlet(newClassPathResource(STATIC_RESOURCE_PATH + "/index.html"), config.getConfig("application")))
+      .addServlet(servlet("FrameworkPage", () => new FrameworkPageServlet(config.getConfig("application")))
         .addMapping("/"))
       .addServlet(servlet("Bayeux", () => bayeuxServlet)
         .addMapping("/bayeux")

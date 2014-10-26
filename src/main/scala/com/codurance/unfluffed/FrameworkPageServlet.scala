@@ -6,9 +6,8 @@ import javax.servlet.http.{HttpServlet, HttpServletRequest, HttpServletResponse}
 
 import com.codurance.unfluffed.FrameworkPageServlet.DOCTYPE
 import com.typesafe.config.Config
-import org.eclipse.jetty.util.resource.Resource
 
-class FrameworkPageServlet(resource: Resource, applicationConfiguration: Config) extends HttpServlet {
+class FrameworkPageServlet(applicationConfiguration: Config) extends HttpServlet {
   override def doGet(request: HttpServletRequest, response: HttpServletResponse) {
     if (request.getPathTranslated != null) {
       super.doGet(request, response)
