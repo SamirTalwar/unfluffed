@@ -27,7 +27,7 @@ class FrameworkPageServlet(configuration: ApplicationConfiguration) extends Http
         <script type="text/javascript" src="/framework/unfluffed.js"></script>
 
         {configuration.processes.map { process =>
-          <script type="text/javascript" src={"/application/processes/" + process + ".js"}></script>
+          <script type="text/javascript" src={process.path}></script>
         }}
       </head>
 
