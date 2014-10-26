@@ -1,11 +1,10 @@
 package com.codurance.unfluffed
 
-import scala.collection.JavaConverters._
-
 import javax.servlet.http.{HttpServlet, HttpServletRequest, HttpServletResponse}
 
 import com.codurance.unfluffed.FrameworkPageServlet.DOCTYPE
 import com.typesafe.config.Config
+import net.ceedubs.ficus.Ficus._
 
 class FrameworkPageServlet(applicationConfiguration: Config) extends HttpServlet {
   override def doGet(request: HttpServletRequest, response: HttpServletResponse) {
@@ -14,7 +13,7 @@ class FrameworkPageServlet(applicationConfiguration: Config) extends HttpServlet
       return
     }
 
-    val processes = applicationConfiguration.getList("processes").asScala.map(_.unwrapped().asInstanceOf[String])
+    val processes = applicationConfiguration.as[List[String]]("processes")
     for (writer <- IO.managed(response.getWriter)) {
       writer.println(DOCTYPE)
       writer.print(html(processes).toString())

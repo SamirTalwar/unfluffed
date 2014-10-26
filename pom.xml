@@ -11,6 +11,7 @@
         <scala.version>2.11</scala.version>
 
         <dependencies.cometd.version>3.0.2-SNAPSHOT</dependencies.cometd.version>
+        <dependencies.ficus.version>1.1.1</dependencies.ficus.version>
         <dependencies.javax.servlet.version>3.1.0</dependencies.javax.servlet.version>
         <dependencies.scala.version>2.11.2</dependencies.scala.version>
         <dependencies.scala-xml.version>1.0.2</dependencies.scala-xml.version>
@@ -41,6 +42,11 @@
             <groupId>com.typesafe</groupId>
             <artifactId>config</artifactId>
             <version>${dependencies.typesafe.config.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.ceedubs</groupId>
+            <artifactId>ficus_${scala.version}</artifactId>
+            <version>${dependencies.ficus.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
