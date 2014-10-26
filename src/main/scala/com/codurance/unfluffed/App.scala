@@ -9,6 +9,7 @@ import com.typesafe.config.ConfigFactory
 import io.undertow.server.handlers.resource.{ClassPathResourceManager, FileResourceManager}
 import io.undertow.servlet.Servlets
 import io.undertow.servlet.api.{InstanceFactory, InstanceHandle}
+import io.undertow.websockets.jsr.WebSocketDeploymentInfo
 import io.undertow.{Handlers, Undertow}
 import org.cometd.server.CometDServlet
 
@@ -27,11 +28,13 @@ object App {
     val servlets = Servlets.deployment()
       .setDeploymentName("Unfluffed")
       .setClassLoader(getClass.getClassLoader)
+      .addServletContextAttribute(WebSocketDeploymentInfo.ATTRIBUTE_NAME, new WebSocketDeploymentInfo)
       .setContextPath("/")
       .addServlet(servlet("FrameworkPage", () => new FrameworkPageServlet(config.getConfig("application")))
         .addMapping("/"))
       .addServlet(servlet("Bayeux", () => bayeuxServlet)
         .addMapping("/bayeux")
+        .addInitParam("ws.cometdURLMapping", "/bayeux/*")
         .setLoadOnStartup(0))
 
     val deploymentManager = Servlets.defaultContainer().addDeployment(servlets)

@@ -63,6 +63,11 @@
             <artifactId>undertow-servlet</artifactId>
             <version>${dependencies.undertow.version}</version>
         </dependency>
+        <dependency>
+            <groupId>io.undertow</groupId>
+            <artifactId>undertow-websockets-jsr</artifactId>
+            <version>${dependencies.undertow.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.cometd.java</groupId>
