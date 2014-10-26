@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-var Fireworks = (function() {
+var Fireworks = function(library) {
 
   // declare the variables we need
   var particles = [],
@@ -56,8 +56,6 @@ var Fireworks = (function() {
 
     // add the canvas in
     document.body.appendChild(mainCanvas);
-    document.addEventListener('mouseup', createFirework, true);
-    document.addEventListener('touchend', createFirework, true);
 
     // and now we set off
     update();
@@ -93,7 +91,7 @@ var Fireworks = (function() {
       fireworkContext.fillStyle = "hsl(" + Math.round(c * 3.6) + ",100%,60%)";
       fireworkContext.fillRect(gridX, gridY, gridSize, gridSize);
       fireworkContext.drawImage(
-        Library.bigGlow,
+        library.bigGlow,
         gridX,
         gridY);
     }
@@ -127,6 +125,111 @@ var Fireworks = (function() {
   }
 
   /**
+   * Stores a collection of functions that
+   * we can use for the firework explosions. Always
+   * takes a firework (Particle) as its parameter
+   */
+  var fireworkExplosions = {
+
+    /**
+     * Explodes in a roughly circular fashion
+     */
+    circle: function(firework) {
+
+      var count = 100;
+      var angle = (Math.PI * 2) / count;
+      while(count--) {
+
+        var randomVelocity = 4 + Math.random() * 4;
+        var particleAngle = count * angle;
+
+        createParticle(
+          firework.pos,
+          null,
+          {
+            x: Math.cos(particleAngle) * randomVelocity,
+            y: Math.sin(particleAngle) * randomVelocity
+          },
+          firework.color,
+          true);
+      }
+    },
+
+    /**
+     * Explodes in a star shape
+     */
+    star: function(firework) {
+
+      // set up how many points the firework
+      // should have as well as the velocity
+      // of the exploded particles etc
+      var points          = 6 + Math.round(Math.random() * 15);
+      var jump            = 3 + Math.round(Math.random() * 7);
+      var subdivisions    = 10;
+      var radius          = 80;
+      var randomVelocity  = -(Math.random() * 3 - 6);
+
+      var start           = 0;
+      var end             = 0;
+      var circle          = Math.PI * 2;
+      var adjustment      = Math.random() * circle;
+
+      do {
+
+        // work out the start, end
+        // and change values
+        start = end;
+        end = (end + jump) % points;
+
+        var sAngle = (start / points) * circle - adjustment;
+        var eAngle = ((start + jump) / points) * circle - adjustment;
+
+        var startPos = {
+          x: firework.pos.x + Math.cos(sAngle) * radius,
+          y: firework.pos.y + Math.sin(sAngle) * radius
+        };
+
+        var endPos = {
+          x: firework.pos.x + Math.cos(eAngle) * radius,
+          y: firework.pos.y + Math.sin(eAngle) * radius
+        };
+
+        var diffPos = {
+          x: endPos.x - startPos.x,
+          y: endPos.y - startPos.y,
+          a: eAngle - sAngle
+        };
+
+        // now linearly interpolate across
+        // the subdivisions to get to a final
+        // set of particles
+        for(var s = 0; s < subdivisions; s++) {
+
+          var sub = s / subdivisions;
+          var subAngle = sAngle + (sub * diffPos.a);
+
+          createParticle(
+            {
+              x: startPos.x + (sub * diffPos.x),
+              y: startPos.y + (sub * diffPos.y)
+            },
+            null,
+            {
+              x: Math.cos(subAngle) * randomVelocity,
+              y: Math.sin(subAngle) * randomVelocity
+            },
+            firework.color,
+            true);
+        }
+
+      // loop until we're back at the start
+      } while(end !== 0);
+
+    }
+
+  };
+
+  /**
    * Passes over all particles particles
    * and draws them
    */
@@ -149,16 +252,16 @@ var Fireworks = (function() {
         if(!firework.usePhysics) {
 
           if(Math.random() < 0.8) {
-            FireworkExplosions.star(firework);
+            fireworkExplosions.star(firework);
           } else {
-            FireworkExplosions.circle(firework);
+            fireworkExplosions.circle(firework);
           }
         }
       }
 
       // pass the canvas context and the firework
       // colours to the
-      firework.render(mainContext, fireworkCanvas);
+      firework.render(mainContext, fireworkCanvas, library);
     }
   }
 
@@ -211,7 +314,7 @@ var Fireworks = (function() {
     createParticle: createParticle
   };
 
-})();
+};
 
 /**
  * Represents a single point, so the firework being fired up
@@ -288,7 +391,7 @@ Particle.prototype = {
     return (this.alpha < 0.005);
   },
 
-  render: function(context, fireworkCanvas) {
+  render: function(context, fireworkCanvas, library) {
 
     var x = Math.round(this.pos.x),
         y = Math.round(this.pos.y),
@@ -314,128 +417,9 @@ Particle.prototype = {
     context.drawImage(fireworkCanvas,
       this.gridX, this.gridY, 12, 12,
       x - 6, y - 6, 12, 12);
-    context.drawImage(Library.smallGlow, x - 3, y - 3);
+    context.drawImage(library.smallGlow, x - 3, y - 3);
 
     context.restore();
   }
 
-};
-
-/**
- * Stores references to the images that
- * we want to reference later on
- */
-var Library = {
-  bigGlow: document.getElementById('big-glow'),
-  smallGlow: document.getElementById('small-glow')
-};
-
-/**
- * Stores a collection of functions that
- * we can use for the firework explosions. Always
- * takes a firework (Particle) as its parameter
- */
-var FireworkExplosions = {
-
-  /**
-   * Explodes in a roughly circular fashion
-   */
-  circle: function(firework) {
-
-    var count = 100;
-    var angle = (Math.PI * 2) / count;
-    while(count--) {
-
-      var randomVelocity = 4 + Math.random() * 4;
-      var particleAngle = count * angle;
-
-      Fireworks.createParticle(
-        firework.pos,
-        null,
-        {
-          x: Math.cos(particleAngle) * randomVelocity,
-          y: Math.sin(particleAngle) * randomVelocity
-        },
-        firework.color,
-        true);
-    }
-  },
-
-  /**
-   * Explodes in a star shape
-   */
-  star: function(firework) {
-
-    // set up how many points the firework
-    // should have as well as the velocity
-    // of the exploded particles etc
-    var points          = 6 + Math.round(Math.random() * 15);
-    var jump            = 3 + Math.round(Math.random() * 7);
-    var subdivisions    = 10;
-    var radius          = 80;
-    var randomVelocity  = -(Math.random() * 3 - 6);
-
-    var start           = 0;
-    var end             = 0;
-    var circle          = Math.PI * 2;
-    var adjustment      = Math.random() * circle;
-
-    do {
-
-      // work out the start, end
-      // and change values
-      start = end;
-      end = (end + jump) % points;
-
-      var sAngle = (start / points) * circle - adjustment;
-      var eAngle = ((start + jump) / points) * circle - adjustment;
-
-      var startPos = {
-        x: firework.pos.x + Math.cos(sAngle) * radius,
-        y: firework.pos.y + Math.sin(sAngle) * radius
-      };
-
-      var endPos = {
-        x: firework.pos.x + Math.cos(eAngle) * radius,
-        y: firework.pos.y + Math.sin(eAngle) * radius
-      };
-
-      var diffPos = {
-        x: endPos.x - startPos.x,
-        y: endPos.y - startPos.y,
-        a: eAngle - sAngle
-      };
-
-      // now linearly interpolate across
-      // the subdivisions to get to a final
-      // set of particles
-      for(var s = 0; s < subdivisions; s++) {
-
-        var sub = s / subdivisions;
-        var subAngle = sAngle + (sub * diffPos.a);
-
-        Fireworks.createParticle(
-          {
-            x: startPos.x + (sub * diffPos.x),
-            y: startPos.y + (sub * diffPos.y)
-          },
-          null,
-          {
-            x: Math.cos(subAngle) * randomVelocity,
-            y: Math.sin(subAngle) * randomVelocity
-          },
-          firework.color,
-          true);
-      }
-
-    // loop until we're back at the start
-    } while(end !== 0);
-
-  }
-
-};
-
-// Go
-window.onload = function() {
-  Fireworks.initialize();
 };
