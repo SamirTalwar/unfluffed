@@ -44,9 +44,6 @@ object App {
       .setHandler(handler)
       .build()
       .start()
-
-    val bayeux = bayeuxServlet.getBayeux
-    Services.initialize(bayeux)
   }
 
   def servlet[S <: Servlet: ClassTag](name: String, servletConstructor: () => S)
