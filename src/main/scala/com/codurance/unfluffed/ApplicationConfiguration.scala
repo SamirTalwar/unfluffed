@@ -11,13 +11,14 @@ object ApplicationConfiguration {
       config.as[Option[List[String]]](configPath).getOrElse(List()).map(Asset)
     }
 
+    val title = config.getString("title")
     val processes = config.as[List[String]]("processes").map(Process)
     val assets = Assets(assetsIn("assets.css"), assetsIn("assets.js"))
-    ApplicationConfiguration(processes, assets)
+    ApplicationConfiguration(title, processes, assets)
   }
 }
 
-case class ApplicationConfiguration(processes: List[Process], assets: Assets)
+case class ApplicationConfiguration(title: String, processes: List[Process], assets: Assets)
 
 case class Process(name: String) {
   val uri: Uri = "application" / "processes" / s"$name.js"

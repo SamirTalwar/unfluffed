@@ -2,7 +2,7 @@ package com.codurance.unfluffed
 
 import javax.servlet.http.{HttpServlet, HttpServletRequest, HttpServletResponse}
 
-import com.codurance.unfluffed.FrameworkPageServlet.DOCTYPE
+import com.codurance.unfluffed.FrameworkPageServlet._
 
 class FrameworkPageServlet(configuration: ApplicationConfiguration) extends HttpServlet {
   override def doGet(request: HttpServletRequest, response: HttpServletResponse) {
@@ -12,8 +12,8 @@ class FrameworkPageServlet(configuration: ApplicationConfiguration) extends Http
     }
 
     for (writer <- IO.managed(response.getWriter)) {
-      writer.println(DOCTYPE)
-      writer.print(html().toString())
+      writer.println(DocType)
+      writer.print(HtmlPrettyPrinter.format(html()))
     }
   }
 
@@ -21,6 +21,8 @@ class FrameworkPageServlet(configuration: ApplicationConfiguration) extends Http
     <html>
       <head>
         <meta charset="utf-8"/>
+
+        <title>{configuration.title}</title>
 
         {configuration.assets.css.map { asset =>
         <link rel="stylesheet" type="text/css" href={asset.uri.toString()}/>
@@ -45,5 +47,7 @@ class FrameworkPageServlet(configuration: ApplicationConfiguration) extends Http
 }
 
 object FrameworkPageServlet {
-  val DOCTYPE = "<!DOCTYPE html>"
+  val DocType = "<!DOCTYPE html>"
+
+  val HtmlPrettyPrinter = new xml.PrettyPrinter(120, 2)
 }
