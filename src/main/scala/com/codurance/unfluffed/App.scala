@@ -6,6 +6,7 @@ import java.nio.file.Paths
 import javax.servlet.Servlet
 
 import com.typesafe.config.ConfigFactory
+import io.undertow.server.handlers.resource.{ClassPathResourceManager, FileResourceManager}
 import io.undertow.servlet.Servlets
 import io.undertow.servlet.api.{InstanceFactory, InstanceHandle}
 import io.undertow.{Handlers, Undertow}
@@ -14,6 +15,8 @@ import org.eclipse.jetty.util.resource.Resource.newClassPathResource
 
 object App {
   val STATIC_RESOURCE_PATH = "com/codurance/unfluffed/static"
+
+  val DIRECT_FILE_TRANSFER_LIMIT_IN_BYTES = 1024
 
   def main(args: Array[String]) {
     val applicationDirectory = Paths.get(args.head)
@@ -28,10 +31,6 @@ object App {
       .setContextPath("/")
       .addServlet(servlet("FrameworkPage", () => new FrameworkPageServlet(newClassPathResource(STATIC_RESOURCE_PATH + "/index.html"), config.getConfig("application")))
         .addMapping("/"))
-      .addServlet(servlet("FrameworkResources", () => new StaticResourceServlet(newClassPathResource(STATIC_RESOURCE_PATH).getURI))
-        .addMapping("/framework/*"))
-      .addServlet(servlet("Processes", () => new StaticResourceServlet(applicationDirectory.resolve("processes").toUri))
-        .addMapping("/application/*"))
       .addServlet(servlet("Bayeux", () => bayeuxServlet)
         .addMapping("/bayeux")
         .setLoadOnStartup(0))
@@ -39,11 +38,17 @@ object App {
     val deploymentManager = Servlets.defaultContainer().addDeployment(servlets)
     deploymentManager.deploy()
 
-    val path = Handlers.path(deploymentManager.start())
+    val handler = Handlers.path(deploymentManager.start())
+      .addPrefixPath("/framework", Handlers.resource(new ClassPathResourceManager(
+        getClass.getClassLoader,
+        STATIC_RESOURCE_PATH)))
+      .addPrefixPath("/application", Handlers.resource(new FileResourceManager(
+        applicationDirectory.resolve("processes").toFile,
+        DIRECT_FILE_TRANSFER_LIMIT_IN_BYTES)))
 
     Undertow.builder()
       .addHttpListener(config.getInt("unfluffed.port"), "localhost")
-      .setHandler(path)
+      .setHandler(handler)
       .build()
       .start()
 
