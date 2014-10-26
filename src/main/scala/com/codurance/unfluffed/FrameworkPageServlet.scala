@@ -3,24 +3,21 @@ package com.codurance.unfluffed
 import javax.servlet.http.{HttpServlet, HttpServletRequest, HttpServletResponse}
 
 import com.codurance.unfluffed.FrameworkPageServlet.DOCTYPE
-import com.typesafe.config.Config
-import net.ceedubs.ficus.Ficus._
 
-class FrameworkPageServlet(applicationConfiguration: Config) extends HttpServlet {
+class FrameworkPageServlet(configuration: ApplicationConfiguration) extends HttpServlet {
   override def doGet(request: HttpServletRequest, response: HttpServletResponse) {
     if (request.getPathTranslated != null) {
       super.doGet(request, response)
       return
     }
 
-    val processes = applicationConfiguration.as[List[String]]("processes")
     for (writer <- IO.managed(response.getWriter)) {
       writer.println(DOCTYPE)
-      writer.print(html(processes).toString())
+      writer.print(html().toString())
     }
   }
 
-  private def html(processes: Seq[String]) = {
+  private def html() = {
     <html>
       <head>
         <meta charset="utf-8"/>
@@ -29,7 +26,7 @@ class FrameworkPageServlet(applicationConfiguration: Config) extends HttpServlet
         <script type="text/javascript" src="/framework/faye/faye-browser-min.js"></script>
         <script type="text/javascript" src="/framework/unfluffed.js"></script>
 
-        {processes.map { process =>
+        {configuration.processes.map { process =>
           <script type="text/javascript" src={"/application/processes/" + process + ".js"}></script>
         }}
       </head>

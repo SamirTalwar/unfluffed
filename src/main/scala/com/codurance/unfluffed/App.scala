@@ -10,6 +10,8 @@ import io.undertow.servlet.Servlets
 import io.undertow.servlet.api.{InstanceFactory, InstanceHandle}
 import io.undertow.websockets.jsr.WebSocketDeploymentInfo
 import io.undertow.{Handlers, Undertow}
+import net.ceedubs.ficus.Ficus._
+import net.ceedubs.ficus.readers.ArbitraryTypeReader._
 import org.cometd.server.CometDServlet
 
 object App {
@@ -17,6 +19,7 @@ object App {
     val applicationDirectory = Paths.get(args.head)
     val config = ConfigFactory.parseFile(applicationDirectory.resolve("application.conf").toFile)
       .withFallback(ConfigFactory.load())
+    val applicationConfiguration = config.as[ApplicationConfiguration]("application")
 
     val bayeuxServlet = new CometDServlet
 
@@ -25,7 +28,7 @@ object App {
       .setClassLoader(getClass.getClassLoader)
       .addServletContextAttribute(WebSocketDeploymentInfo.ATTRIBUTE_NAME, new WebSocketDeploymentInfo)
       .setContextPath("/")
-      .addServlet(servlet("FrameworkPage", () => new FrameworkPageServlet(config.getConfig("application")))
+      .addServlet(servlet("FrameworkPage", () => new FrameworkPageServlet(applicationConfiguration))
         .addMapping("/"))
       .addServlet(servlet("Bayeux", () => bayeuxServlet)
         .addMapping("/bayeux")
