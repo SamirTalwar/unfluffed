@@ -6,8 +6,6 @@ import java.nio.file.Paths
 import javax.servlet.Servlet
 
 import com.typesafe.config.ConfigFactory
-import io.undertow.predicate.Predicates
-import io.undertow.server.handlers.resource.{ClassPathResourceManager, FileResourceManager}
 import io.undertow.servlet.Servlets
 import io.undertow.servlet.api.{InstanceFactory, InstanceHandle}
 import io.undertow.websockets.jsr.WebSocketDeploymentInfo
@@ -15,10 +13,6 @@ import io.undertow.{Handlers, Undertow}
 import org.cometd.server.CometDServlet
 
 object App {
-  val STATIC_RESOURCE_PATH = "com/codurance/unfluffed/static"
-
-  val DIRECT_FILE_TRANSFER_LIMIT_IN_BYTES = 1024
-
   def main(args: Array[String]) {
     val applicationDirectory = Paths.get(args.head)
     val config = ConfigFactory.parseFile(applicationDirectory.resolve("application.conf").toFile)
@@ -42,13 +36,8 @@ object App {
     deploymentManager.deploy()
 
     val handler = Handlers.path(deploymentManager.start())
-      .addPrefixPath("/framework", Handlers.resource(new ClassPathResourceManager(
-          getClass.getClassLoader,
-          STATIC_RESOURCE_PATH)))
-      .addPrefixPath("/application", Handlers.resource(new FileResourceManager(
-          applicationDirectory.toFile,
-          DIRECT_FILE_TRANSFER_LIMIT_IN_BYTES))
-        .setAllowed(Predicates.not(Predicates.path("application.conf"))))
+      .addPrefixPath("/framework", StaticResources.frameworkResources)
+      .addPrefixPath("/application", StaticResources.applicationResources(applicationDirectory))
 
     Undertow.builder()
       .addHttpListener(config.getInt("unfluffed.port"), "localhost")
