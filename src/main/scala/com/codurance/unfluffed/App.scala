@@ -6,6 +6,7 @@ import java.nio.file.Paths
 import javax.servlet.Servlet
 
 import com.typesafe.config.ConfigFactory
+import io.undertow.predicate.Predicates
 import io.undertow.server.handlers.resource.{ClassPathResourceManager, FileResourceManager}
 import io.undertow.servlet.Servlets
 import io.undertow.servlet.api.{InstanceFactory, InstanceHandle}
@@ -42,11 +43,12 @@ object App {
 
     val handler = Handlers.path(deploymentManager.start())
       .addPrefixPath("/framework", Handlers.resource(new ClassPathResourceManager(
-        getClass.getClassLoader,
-        STATIC_RESOURCE_PATH)))
+          getClass.getClassLoader,
+          STATIC_RESOURCE_PATH)))
       .addPrefixPath("/application", Handlers.resource(new FileResourceManager(
-        applicationDirectory.resolve("processes").toFile,
-        DIRECT_FILE_TRANSFER_LIMIT_IN_BYTES)))
+          applicationDirectory.toFile,
+          DIRECT_FILE_TRANSFER_LIMIT_IN_BYTES))
+        .setAllowed(Predicates.not(Predicates.path("application.conf"))))
 
     Undertow.builder()
       .addHttpListener(config.getInt("unfluffed.port"), "localhost")
