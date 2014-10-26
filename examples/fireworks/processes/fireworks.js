@@ -13,12 +13,14 @@ Unfluffed.Process(function(app) {
     fireworks.initialize();
 
     function createFirework(event) {
+        var x = event.clientX || event.changedTouches[0].clientX,
+            y = event.clientY || event.changedTouches[0].clientY;
         app.publish('/firework', {
             target: {
-                y: (event.clientY || event.changedTouches[0].clientY) + (Math.random() * 100)
+                y: y
             },
             velocity: {
-                x: Math.random() * 3 - 1.5
+                x: (x - window.innerWidth / 2) / 100
             },
             color: Math.floor(Math.random() * 100) * 12
         });
