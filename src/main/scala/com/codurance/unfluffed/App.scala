@@ -2,6 +2,7 @@ package com.codurance.unfluffed
 
 import scala.reflect.{ClassTag, classTag}
 
+import java.net.InetAddress
 import java.nio.file.Paths
 import javax.servlet.Servlet
 
@@ -40,11 +41,16 @@ object App {
       .addPrefixPath("/framework", StaticResources.frameworkResources)
       .addPrefixPath("/application", StaticResources.applicationResources(applicationDirectory))
 
-    Undertow.builder()
-      .addHttpListener(config.getInt("unfluffed.port"), "localhost")
+    val host = InetAddress.getLocalHost.getHostName
+    val port = config.getInt("unfluffed.port")
+    val undertow = Undertow.builder()
+      .addHttpListener(port, host)
+      .addHttpListener(port, "localhost")
       .setHandler(handler)
       .build()
-      .start()
+
+    undertow.start()
+    println(s"Server started on http://$host:$port/.")
   }
 
   def servlet[S <: Servlet: ClassTag](name: String, servletConstructor: () => S)
