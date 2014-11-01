@@ -2,10 +2,17 @@
     var client = new Faye.Client('/bayeux'),
         processes = [];
 
+    function debugFunction(name, f) {
+        return function() {
+            console.debug.apply(console, [name].concat(arguments));
+            f.apply(this, arguments);
+        };
+    }
+
     window.Unfluffed = {
         App: {
-            publish: client.publish.bind(client),
-            subscribe: client.subscribe.bind(client),
+            publish: debugFunction('publish', client.publish.bind(client)),
+            subscribe: debugFunction('subscribe', client.subscribe.bind(client)),
             client: {
                 asset: function(path) {
                     return "/application/assets/" + path
