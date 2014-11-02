@@ -4,8 +4,8 @@
 
     function debugFunction(name, f) {
         return function() {
-            console.debug.apply(console, [name].concat(arguments));
-            f.apply(this, arguments);
+            console.debug.apply(console, [name].concat(Array.prototype.slice.call(arguments)));
+            return f.apply(this, arguments);
         };
     }
 
