@@ -1,20 +1,24 @@
 Unfluffed.Process(function(app) {
-    var move = 1,
-        next = 'hero';
+    var move = 1;
+
+    function play(piece, position) {
+        app.publish('/stage/place/' + piece, position);
+        move += 1;
+    }
+
+    function next(player) {
+        app.publish('/move/request/' + player, {number: move});
+    }
 
     app.subscribe('/move/response/hero', function(position) {
-        app.publish('/stage/place/x', position);
-
-        move += 1;
-        app.publish('/move/request/villain', {number: move});
+        play('x', position);
+        next('villain');
     });
 
     app.subscribe('/move/response/villain', function(position) {
-        app.publish('/stage/place/o', position);
-
-        move += 1;
-        app.publish('/move/request/hero', {number: move});
+        play('o', position);
+        next('hero');
     });
 
-    app.publish('/move/request/hero', {number: move});
+    next('hero');
 });
