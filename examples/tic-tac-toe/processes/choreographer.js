@@ -9,6 +9,16 @@ Unfluffed.Process(function(app) {
         villain = 'villain',
 
         winConditions = [
+            [{x: 0, y: 0}, {x: 1, y: 0}, {x: 2, y: 0}],
+            [{x: 0, y: 1}, {x: 1, y: 1}, {x: 2, y: 1}],
+            [{x: 0, y: 2}, {x: 1, y: 2}, {x: 2, y: 2}],
+
+            [{x: 0, y: 0}, {x: 0, y: 1}, {x: 0, y: 2}],
+            [{x: 1, y: 0}, {x: 1, y: 1}, {x: 1, y: 2}],
+            [{x: 2, y: 0}, {x: 2, y: 1}, {x: 2, y: 2}],
+
+            [{x: 0, y: 0}, {x: 1, y: 1}, {x: 2, y: 2}],
+            [{x: 2, y: 0}, {x: 1, y: 1}, {x: 0, y: 2}],
         ],
 
         board = [[], [], []];
@@ -24,14 +34,18 @@ Unfluffed.Process(function(app) {
     }
 
     function checkMovement(player) {
-        var won = winConditions.some(function(winCondition) {
+        var winPositions = winConditions.find(function(winCondition) {
             return winCondition.every(function(position) {
                 return board[position.y][position.x] == player;
-            })
+            });
         });
 
-        if (won) {
-            app.publish('/game/state', {state: 'won', winner: player});
+        if (winPositions) {
+            app.publish('/game/state', {
+                state: 'won',
+                winner: player,
+                positions: winPositions
+            });
             return;
         }
 

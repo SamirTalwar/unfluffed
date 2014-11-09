@@ -29,6 +29,45 @@ Unfluffed.Process(function (app) {
         });
     });
 
+    app.subscribe('/game/state', function(state) {
+        if (state.state != 'won') {
+            return;
+        }
+
+        var start = state.positions[0],
+            end = state.positions[2],
+
+            vertices = [];
+
+        if (start.x == end.x) {
+            draw(
+                {x: start.x * BOX_SIZE + (BOX_SIZE - LINE_WIDTH) / 2, y: 0},
+                {x: start.x * BOX_SIZE + (BOX_SIZE + LINE_WIDTH) / 2, y: 0},
+                {x: start.x * BOX_SIZE + (BOX_SIZE + LINE_WIDTH) / 2, y: BOARD_SIZE},
+                {x: start.x * BOX_SIZE + (BOX_SIZE - LINE_WIDTH) / 2, y: BOARD_SIZE});
+        } else if (start.y == end.y) {
+            draw(
+                {x: 0, y: start.y * BOX_SIZE + (BOX_SIZE + LINE_WIDTH) / 2},
+                {x: 0, y: start.y * BOX_SIZE + (BOX_SIZE - LINE_WIDTH) / 2},
+                {x: BOARD_SIZE, y: start.y * BOX_SIZE + (BOX_SIZE - LINE_WIDTH) / 2},
+                {x: BOARD_SIZE, y: start.y * BOX_SIZE + (BOX_SIZE + LINE_WIDTH) / 2});
+        } else {
+            if (start.x == 0) {
+                draw(
+                    {x: 0, y: LINE_WIDTH},
+                    {x: LINE_WIDTH, y: 0},
+                    {x: BOARD_SIZE, y: BOARD_SIZE - LINE_WIDTH},
+                    {x: BOARD_SIZE - LINE_WIDTH, y: BOARD_SIZE});
+            } else {
+                draw(
+                    {x: BOARD_SIZE - LINE_WIDTH, y: 0},
+                    {x: BOARD_SIZE, y: LINE_WIDTH},
+                    {x: LINE_WIDTH, y: BOARD_SIZE},
+                    {x: 0, y: BOARD_SIZE - LINE_WIDTH});
+            }
+        }
+    });
+
     app.subscribe('/move/accept/hero', function(position) {
         var offsetX = BOX_SIZE * position.x,
             offsetY = BOX_SIZE * position.y,
