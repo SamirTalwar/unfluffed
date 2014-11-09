@@ -29,31 +29,7 @@ Unfluffed.Process(function (app) {
         });
     });
 
-    app.subscribe('/stage/place/o', function(position) {
-        canvasContext.beginPath();
-        canvasContext.arc(
-            BOX_SIZE * position.x + BOX_SIZE / 2,
-            BOX_SIZE * position.y + BOX_SIZE / 2,
-            BOX_SIZE / 2 - PADDING,
-            0,
-            Math.PI * 2
-        );
-        canvasContext.fill();
-
-        canvasContext.fillStyle = 'white';
-        canvasContext.beginPath();
-        canvasContext.arc(
-            BOX_SIZE * position.x + BOX_SIZE / 2,
-            BOX_SIZE * position.y + BOX_SIZE / 2,
-            BOX_SIZE / 2 - PADDING - LINE_WIDTH,
-            0,
-            Math.PI * 2
-        );
-        canvasContext.fill();
-        canvasContext.fillStyle = 'black';
-    });
-
-    app.subscribe('/stage/place/x', function(position) {
+    app.subscribe('/move/accept/hero', function(position) {
         var offsetX = BOX_SIZE * position.x,
             offsetY = BOX_SIZE * position.y,
             positions = {
@@ -101,6 +77,30 @@ Unfluffed.Process(function (app) {
 
         draw(positions.tl.a, positions.tl.b, positions.br.a, positions.br.b);
         draw(positions.tr.a, positions.tr.b, positions.bl.a, positions.bl.b);
+    });
+
+    app.subscribe('/move/accept/villain', function(position) {
+        canvasContext.beginPath();
+        canvasContext.arc(
+            BOX_SIZE * position.x + BOX_SIZE / 2,
+            BOX_SIZE * position.y + BOX_SIZE / 2,
+            BOX_SIZE / 2 - PADDING,
+            0,
+            Math.PI * 2
+        );
+        canvasContext.fill();
+
+        canvasContext.fillStyle = 'white';
+        canvasContext.beginPath();
+        canvasContext.arc(
+            BOX_SIZE * position.x + BOX_SIZE / 2,
+            BOX_SIZE * position.y + BOX_SIZE / 2,
+            BOX_SIZE / 2 - PADDING - LINE_WIDTH,
+            0,
+            Math.PI * 2
+        );
+        canvasContext.fill();
+        canvasContext.fillStyle = 'black';
     });
 
     function draw() {

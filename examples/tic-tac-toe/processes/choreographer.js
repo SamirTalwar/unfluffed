@@ -14,7 +14,13 @@ Unfluffed.Process(function(app) {
         board = [[], [], []];
 
     function place(player, position) {
+        if (board[position.y][position.x]) {
+            app.publish('/move/reject/' + player, {});
+            return;
+        }
+
         board[position.y][position.x] = player;
+        app.publish('/move/accept/' + player, position);
     }
 
     function checkMovement(player) {
