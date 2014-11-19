@@ -15,13 +15,10 @@ Unfluffed.Process(function(app) {
     function createFirework(event) {
         var x = event.clientX || event.changedTouches[0].clientX,
             y = event.clientY || event.changedTouches[0].clientY;
+
         app.publish('/firework', {
-            target: {
-                y: y
-            },
-            velocity: {
-                x: (x - window.innerWidth / 2) / 100
-            },
+            x: x / window.innerWidth,
+            y: y / window.innerHeight,
             color: Math.floor(Math.random() * 100) * 12
         });
     }
@@ -29,8 +26,11 @@ Unfluffed.Process(function(app) {
     document.addEventListener('mouseup', createFirework, true);
     document.addEventListener('touchend', createFirework, true);
 
-    app.subscribe('/firework', function(particle) {
+    app.subscribe('/firework', function(firework) {
         fireworks.createParticle(
-            particle.position, particle.target, particle.velocity, particle.color, particle.usePhysics);
+            null,
+            {y: (firework.y * window.innerHeight)},
+            {x: ((firework.x * window.innerWidth) - window.innerWidth / 2) / 100},
+            firework.color);
     });
 });
