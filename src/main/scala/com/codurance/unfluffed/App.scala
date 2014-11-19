@@ -16,8 +16,10 @@ import org.cometd.server.CometDServlet
 object App {
   def main(args: Array[String]) {
     val applicationDirectory = Paths.get(args.head)
-    val config = ConfigFactory.parseFile(applicationDirectory.resolve("application.conf").toFile)
-      .withFallback(ConfigFactory.load())
+    val config =
+      ConfigFactory.defaultOverrides()
+        .withFallback(ConfigFactory.parseFile(applicationDirectory.resolve("application.conf").toFile))
+        .withFallback(ConfigFactory.load())
     val applicationConfiguration = ApplicationConfiguration.from(config.getConfig("application"))
 
     val bayeuxServlet = new CometDServlet
