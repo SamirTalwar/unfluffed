@@ -1,7 +1,5 @@
 package com.codurance.unfluffed
 
-import scala.reflect.{ClassTag, classTag}
-
 import java.net.InetAddress
 import java.nio.file.Paths
 import javax.servlet.Servlet
@@ -12,6 +10,8 @@ import io.undertow.servlet.api.{InstanceFactory, InstanceHandle}
 import io.undertow.websockets.jsr.WebSocketDeploymentInfo
 import io.undertow.{Handlers, Undertow}
 import org.cometd.server.CometDServlet
+
+import scala.reflect.{ClassTag, classTag}
 
 object App {
   def main(args: Array[String]) {
@@ -50,6 +50,9 @@ object App {
       .addHttpListener(port, "localhost")
       .setHandler(handler)
       .build()
+
+    val bayeux = bayeuxServlet.getBayeux
+    Identification.initialize(bayeux)
 
     undertow.start()
     println(s"Server started on http://$host:$port/.")

@@ -1,5 +1,6 @@
 (function() {
     var client = new Faye.Client('/bayeux'),
+        clientId,
         processes = [];
 
     function debugFunction(name, f) {
@@ -14,8 +15,20 @@
             publish: debugFunction('publish', client.publish.bind(client)),
             subscribe: debugFunction('subscribe', client.subscribe.bind(client)),
             client: {
+                id: function(onIdentification) {
+                    if (clientId) {
+                        onIdentification(clientId);
+                    } else {
+                        var subscription = client.subscribe('/framework/identification', function(data) {
+                            clientId = data.id;
+                            subscription.cancel();
+                            onIdentification(clientId);
+                        });
+                        client.publish('/framework/identification', {});
+                    }
+                },
                 asset: function(path) {
-                    return "/application/assets/" + path
+                    return "/application/assets/" + path;
                 }
             }
         },
