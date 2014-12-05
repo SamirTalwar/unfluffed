@@ -1,7 +1,7 @@
 (function() {
-    var client = new Faye.Client('/bayeux'),
-        clientId,
-        processes = [];
+    var client = new Faye.Client('/bayeux');
+    var clientId;
+    var processes = [];
 
     function debugFunction(name, f) {
         return function() {

@@ -1,12 +1,12 @@
 Unfluffed.Process(function (app) {
-    var BOARD_SIZE = 600,
-        BOX_SIZE = BOARD_SIZE / 3,
-        LINE_WIDTH = 20,
-        PADDING = 30,
+    var BOARD_SIZE = 600;
+    var BOX_SIZE = BOARD_SIZE / 3;
+    var LINE_WIDTH = 20;
+    var PADDING = 30;
 
-        stage = $('<div>').addClass('stage'),
-        canvas = $('<canvas>').attr('width', BOARD_SIZE).attr('height', BOARD_SIZE),
-        canvasContext = canvas[0].getContext('2d');
+    var stage = $('<div>').addClass('stage');
+    var canvas = $('<canvas>').attr('width', BOARD_SIZE).attr('height', BOARD_SIZE);
+    var canvasContext = canvas[0].getContext('2d');
 
     function clearTheBoard() {
         canvasContext.fillStyle = 'white';
@@ -24,11 +24,11 @@ Unfluffed.Process(function (app) {
         .append(stage.append(canvas));
 
     canvas.click(function(event) {
-        var clickX = event.clientX - this.offsetLeft,
-            clickY = event.clientY - this.offsetTop,
+        var clickX = event.clientX - this.offsetLeft;
+        var clickY = event.clientY - this.offsetTop;
 
-            x = clickX / (BOARD_SIZE / 3) | 0,
-            y = clickY / (BOARD_SIZE / 3) | 0;
+        var x = clickX / (BOARD_SIZE / 3) | 0;
+        var y = clickY / (BOARD_SIZE / 3) | 0;
 
         app.publish('/stage/interaction', {
             x: x,
@@ -45,10 +45,10 @@ Unfluffed.Process(function (app) {
             return;
         }
 
-        var start = state.positions[0],
-            end = state.positions[2],
+        var start = state.positions[0];
+        var end = state.positions[2];
 
-            vertices = [];
+        var vertices = [];
 
         if (start.x == end.x) {
             draw(
@@ -80,50 +80,50 @@ Unfluffed.Process(function (app) {
     });
 
     app.subscribe('/move/accept/hero', function(position) {
-        var offsetX = BOX_SIZE * position.x,
-            offsetY = BOX_SIZE * position.y,
-            positions = {
-                tl: {
-                    a: {
-                        x: offsetX + PADDING,
-                        y: offsetY + PADDING + LINE_WIDTH / 2
-                    },
-                    b: {
-                        x: offsetX + PADDING + LINE_WIDTH / 2,
-                        y: offsetY + PADDING
-                    }
+        var offsetX = BOX_SIZE * position.x;
+        var offsetY = BOX_SIZE * position.y;
+        var positions = {
+            tl: {
+                a: {
+                    x: offsetX + PADDING,
+                    y: offsetY + PADDING + LINE_WIDTH / 2
                 },
-                tr: {
-                    a: {
-                        x: offsetX + BOX_SIZE - PADDING - LINE_WIDTH / 2,
-                        y: offsetY + PADDING
-                    },
-                    b: {
-                        x: offsetX + BOX_SIZE - PADDING,
-                        y: offsetY + PADDING + LINE_WIDTH / 2
-                    }
-                },
-                br: {
-                    a: {
-                        x: offsetX + BOX_SIZE - PADDING,
-                        y: offsetY + BOX_SIZE - PADDING - LINE_WIDTH / 2
-                    },
-                    b: {
-                        x: offsetX + BOX_SIZE - PADDING - LINE_WIDTH / 2,
-                        y: offsetY + BOX_SIZE - PADDING
-                    }
-                },
-                bl: {
-                    a: {
-                        x: offsetX + PADDING + LINE_WIDTH / 2,
-                        y: offsetY + BOX_SIZE - PADDING
-                    },
-                    b: {
-                        x: offsetX + PADDING,
-                        y: offsetY + BOX_SIZE - PADDING - LINE_WIDTH / 2
-                    }
+                b: {
+                    x: offsetX + PADDING + LINE_WIDTH / 2,
+                    y: offsetY + PADDING
                 }
-            };
+            },
+            tr: {
+                a: {
+                    x: offsetX + BOX_SIZE - PADDING - LINE_WIDTH / 2,
+                    y: offsetY + PADDING
+                },
+                b: {
+                    x: offsetX + BOX_SIZE - PADDING,
+                    y: offsetY + PADDING + LINE_WIDTH / 2
+                }
+            },
+            br: {
+                a: {
+                    x: offsetX + BOX_SIZE - PADDING,
+                    y: offsetY + BOX_SIZE - PADDING - LINE_WIDTH / 2
+                },
+                b: {
+                    x: offsetX + BOX_SIZE - PADDING - LINE_WIDTH / 2,
+                    y: offsetY + BOX_SIZE - PADDING
+                }
+            },
+            bl: {
+                a: {
+                    x: offsetX + PADDING + LINE_WIDTH / 2,
+                    y: offsetY + BOX_SIZE - PADDING
+                },
+                b: {
+                    x: offsetX + PADDING,
+                    y: offsetY + BOX_SIZE - PADDING - LINE_WIDTH / 2
+                }
+            }
+        };
 
         draw(positions.tl.a, positions.tl.b, positions.br.a, positions.br.b);
         draw(positions.tr.a, positions.tr.b, positions.bl.a, positions.bl.b);

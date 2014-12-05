@@ -13,8 +13,8 @@ Unfluffed.Process(function(app) {
     fireworks.initialize();
 
     function createFirework(event) {
-        var x = event.clientX || event.changedTouches[0].clientX,
-            y = event.clientY || event.changedTouches[0].clientY;
+        var x = event.clientX || event.changedTouches[0].clientX;
+        var y = event.clientY || event.changedTouches[0].clientY;
 
         app.publish('/firework', {
             x: x / window.innerWidth,
