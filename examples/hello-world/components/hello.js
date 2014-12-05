@@ -1,4 +1,4 @@
-Unfluffed.Process(function(app) {
+Unfluffed.Component(function(app) {
     app.subscribe('/hello', function(message) {
         $('body').append($('<p>').text(message.greeting));
     }).then(function() {

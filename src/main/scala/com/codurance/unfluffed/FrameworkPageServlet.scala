@@ -31,8 +31,8 @@ class FrameworkPageServlet(configuration: ApplicationConfiguration) extends Http
         <script type="text/javascript" src="/framework/faye-browser-js/js/faye-browser-min.js"></script>
         <script type="text/javascript" src="/framework/unfluffed.js"></script>
 
-        {configuration.processes.map { process =>
-        <script type="text/javascript" src={process.uri.toString()}></script>
+        {configuration.components.map { component =>
+        <script type="text/javascript" src={component.uri.toString()}></script>
         }}
 
         {configuration.assets.js.map { asset =>

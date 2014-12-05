@@ -1,4 +1,4 @@
-Unfluffed.Process(function(app) {
+Unfluffed.Component(function(app) {
     function imageElement(src) {
         var img = document.createElement('img');
         img.src = src;

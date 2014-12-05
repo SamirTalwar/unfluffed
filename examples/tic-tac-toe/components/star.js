@@ -1,4 +1,4 @@
-Unfluffed.Process(function(app) {
+Unfluffed.Component(function(app) {
     var interactionSubscription;
 
     app.client.id(function(id) {

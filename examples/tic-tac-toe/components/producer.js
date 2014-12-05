@@ -1,4 +1,4 @@
-Unfluffed.Process(function(app) {
+Unfluffed.Component(function(app) {
     function newGameButton() {
         return $('<button>').text('New Game').click(function() {
             app.client.id(function(id) {

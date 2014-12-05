@@ -1,7 +1,7 @@
 (function() {
     var client = new Faye.Client('/bayeux');
     var clientId;
-    var processes = [];
+    var components = [];
 
     function debugFunction(name, f) {
         return function() {
@@ -32,14 +32,14 @@
                 }
             }
         },
-        Process: function(process) {
-            processes.push(process);
+        Component: function(component) {
+            components.push(component);
         }
     };
 
     window.addEventListener('load', function() {
-        processes.forEach(function(process) {
-            process(window.Unfluffed.App);
+        components.forEach(function(component) {
+            component(window.Unfluffed.App);
         });
     });
 }());

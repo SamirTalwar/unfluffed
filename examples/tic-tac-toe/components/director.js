@@ -1,4 +1,4 @@
-Unfluffed.Process(function(app) {
+Unfluffed.Component(function(app) {
     var move = 1;
 
     function play(piece, position) {

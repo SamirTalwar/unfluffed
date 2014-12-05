@@ -1,4 +1,4 @@
-Unfluffed.Process(function (app) {
+Unfluffed.Component(function (app) {
     var BOARD_SIZE = 600;
     var BOX_SIZE = BOARD_SIZE / 3;
     var LINE_WIDTH = 20;
