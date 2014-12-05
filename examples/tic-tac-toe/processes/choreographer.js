@@ -26,14 +26,15 @@ Unfluffed.Process(function(app) {
     function place(player, position) {
         if (board[position.y][position.x]) {
             app.publish('/move/reject/' + player, {});
-            return;
+            return false;
         }
 
         board[position.y][position.x] = player;
         app.publish('/move/accept/' + player, position);
+        return true;
     }
 
-    function checkMovement(player) {
+    function checkMovement(player, nextPlayer, heroId, villainId) {
         var winPositions = winConditions.find(function(winCondition) {
             return winCondition.every(function(position) {
                 return board[position.y][position.x] == player;
@@ -58,16 +59,36 @@ Unfluffed.Process(function(app) {
             return;
         }
 
-        app.publish('/game/state', {state: 'running'});
+        app.publish('/game/state', {
+            state: 'running',
+            turn: nextPlayer,
+            hero: heroId,
+            villain: villainId
+        });
     }
 
-    app.subscribe('/move/response/hero', function(position) {
-        place(hero, position);
-        checkMovement(hero);
-    });
+    app.subscribe('/game/state', function(data) {
+        if (data.state == 'started') {
+            board = [[], [], []];
 
-    app.subscribe('/move/response/villain', function(position) {
-        place(villain, position);
-        checkMovement(villain);
+            app.subscribe('/move/response/' + data.hero, function(position) {
+                if (place(hero, position)) {
+                    checkMovement(hero, villain, data.hero, data.villain);
+                }
+            });
+
+            app.subscribe('/move/response/' + data.villain, function(position) {
+                if (place(villain, position)) {
+                    checkMovement(villain, hero, data.hero, data.villain);
+                }
+            });
+
+            app.publish('/game/state', {
+                state: 'running',
+                turn: hero,
+                hero: data.hero,
+                villain: data.villain
+            });
+        }
     });
 });

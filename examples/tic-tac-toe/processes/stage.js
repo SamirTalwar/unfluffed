@@ -8,13 +8,20 @@ Unfluffed.Process(function (app) {
         canvas = $('<canvas>').attr('width', BOARD_SIZE).attr('height', BOARD_SIZE),
         canvasContext = canvas[0].getContext('2d');
 
+    function clearTheBoard() {
+        canvasContext.fillStyle = 'white';
+        canvasContext.fillRect(0, 0, BOARD_SIZE, BOARD_SIZE);
+        canvasContext.fillStyle = 'black';
+
+        canvasContext.fillRect(0, BOX_SIZE - LINE_WIDTH / 2, BOARD_SIZE, LINE_WIDTH);
+        canvasContext.fillRect(BOX_SIZE - LINE_WIDTH / 2, 0, LINE_WIDTH, BOARD_SIZE);
+        canvasContext.fillRect(0, BOX_SIZE * 2 - LINE_WIDTH / 2, BOARD_SIZE, LINE_WIDTH);
+        canvasContext.fillRect(BOX_SIZE * 2 - LINE_WIDTH / 2, 0, LINE_WIDTH, BOARD_SIZE);
+    }
+
+    clearTheBoard();
     $(document.body)
         .append(stage.append(canvas));
-
-    canvasContext.fillRect(0, BOX_SIZE - LINE_WIDTH / 2, BOARD_SIZE, LINE_WIDTH);
-    canvasContext.fillRect(BOX_SIZE - LINE_WIDTH / 2, 0, LINE_WIDTH, BOARD_SIZE);
-    canvasContext.fillRect(0, BOX_SIZE * 2 - LINE_WIDTH / 2, BOARD_SIZE, LINE_WIDTH);
-    canvasContext.fillRect(BOX_SIZE * 2 - LINE_WIDTH / 2, 0, LINE_WIDTH, BOARD_SIZE);
 
     canvas.click(function(event) {
         var clickX = event.clientX - this.offsetLeft,
@@ -30,6 +37,10 @@ Unfluffed.Process(function (app) {
     });
 
     app.subscribe('/game/state', function(state) {
+        if (state.state == 'started') {
+            clearTheBoard();
+        }
+
         if (state.state != 'won') {
             return;
         }
