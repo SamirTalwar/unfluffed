@@ -1,29 +1,34 @@
 Unfluffed.Component(function(app) {
     function newGameButton() {
         return $('<button>').text('New Game').click(function() {
-            app.client.id(function(id) {
-                app.publish('/game/state', {
+            var gameId = prompt('Game Name: ');
+            app.client.id(function(playerId) {
+                var gameId = app.uuid();
+                app.publish('/game:' + gameId + '/state', {
                     state: 'waiting-for-player',
-                    hero: id
+                    hero: playerId
                 });
             });
         })
     }
 
-    function joinGameButton(player1Id) {
+    function joinGameButton(otherPlayerId) {
         return $('<button>').text('Join Game').click(function() {
-            app.client.id(function(id) {
-                app.publish('/game/state', {
+            app.client.id(function(playerId) {
+                app.publish('/game:' + gameId + '/state', {
                     state: 'started',
-                    hero: player1Id,
-                    villain: (player1Id == id) ? (id + '!') : id
+                    hero: otherPlayerId,
+                    villain: (playerId == otherPlayerId) ? (playerId + '!') : playerId
                 });
             });
         });
     }
 
     var actions = $('<p>');
-    $(document.body).append(actions);
+    var games = $('<div>').addClass('games')
+        .append($('<h2>').text('Games'))
+        .append(actions);
+    $(document.body).append(games);
 
     actions.append(newGameButton());
 
